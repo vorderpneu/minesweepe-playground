@@ -10,19 +10,19 @@ export class ContainerComponent implements OnInit {
 
   @Input() minefield: Field[][] | null = [];
   @Input() flaggedFields: string[] = [];
-  @Input() test: boolean = false;
+  @Input() test = false;
   @Output() leftClickOnField = new EventEmitter<Event>();
   @Output() rightClickOnField = new EventEmitter<string>();
 
-  emitLeftClickOnField($event: Event) {
+  constructor() { }
+
+  emitLeftClickOnField($event: Event): void  {
     this.leftClickOnField.emit($event);
   }
 
-  emitRightClickOnField(id: string) {
+  emitRightClickOnField(id: string): void  {
     this.rightClickOnField.emit(id);
   }
-
-  constructor() { }
 
   ngOnInit(): void {
   }

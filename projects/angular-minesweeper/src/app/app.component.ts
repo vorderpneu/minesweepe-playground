@@ -24,11 +24,11 @@ export class AppComponent implements OnInit {
     this.minefield = of(setupMinefield(newMinefield, bombs));
   }
 
-  public handleLeftClickOnField($event: Event) {
+  handleLeftClickOnField($event: Event): void {
     console.log($event);
   }
 
-  public handleRightClickOnField(id: string) {
+  handleRightClickOnField(id: string): void {
     this.flaggedFields = fillFlaggedFieldsArray([...this.flaggedFields], id, bombs);
   }
 }

@@ -1,6 +1,6 @@
 import { bomb, Field } from '../model/model';
 
-export function setupMinefield(minefield: Field[][], bombs: number): Field[][] {
+export const setupMinefield = (minefield: Field[][], bombs: number): Field[][] => {
   for (let i = 0; i < bombs; i++) {
     const row = Math.floor(Math.random() * minefield.length);
     const column = Math.floor(Math.random() * minefield[0].length);
@@ -12,9 +12,9 @@ export function setupMinefield(minefield: Field[][], bombs: number): Field[][] {
     }
   }
   return minefield;
-}
+};
 
-export function increaseBombCountOfNeighbours(minefield: Field[][], row: number, column: number) {
+export const increaseBombCountOfNeighbours = (minefield: Field[][], row: number, column: number): Field[][] => {
   const rows = minefield.length;
   const columns = minefield[0].length;
   if ((minefield[row][column]) === bomb) {
@@ -45,20 +45,18 @@ export function increaseBombCountOfNeighbours(minefield: Field[][], row: number,
   }
 
   return minefield;
-}
+};
 
-export function fillFlaggedFieldsArray(array: string[], fieldId: string, bombs: number): string[] {
+export const fillFlaggedFieldsArray = (array: string[], fieldId: string, bombs: number): string[] => {
   const index = array.indexOf(fieldId);
   if (!!fieldId ) {
     if (index === -1) {
-      if (array.length < bombs) array.push(fieldId);
+      if (array.length < bombs) { array.push(fieldId); }
     } else {
       array.splice(index, 1);
     }
   }
   return array;
-}
+};
 
-export function arrayOfStringsContainsValue(array: string[], value: string): boolean {
-  return array.indexOf(value) !== -1;
-}
+export const arrayOfStringsContainsValue = (array: string[], value: string): boolean => array.indexOf(value) !== -1;

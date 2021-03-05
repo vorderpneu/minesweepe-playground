@@ -13,11 +13,11 @@ export class MinefieldComponent {
   @Output() leftClickOnField = new EventEmitter<Event>();
   @Output() rightClickOnField = new EventEmitter<string>();
 
-  emitLeftClickOnField($event: Event) {
+  emitLeftClickOnField($event: Event): void {
     this.leftClickOnField.emit($event);
   }
 
-  emitRightClickOnField(id: string) {
+  emitRightClickOnField(id: string): void  {
     this.rightClickOnField.emit(id);
   }
 

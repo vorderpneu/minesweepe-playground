@@ -265,7 +265,7 @@ describe('Helpers', () => {
 
   describe('fillFlaggedFieldsArray', () => {
     it('add id to Array', () => {
-      const result = fillFlaggedFieldsArray([],'test', 10);
+      const result = fillFlaggedFieldsArray([], 'test', 10);
       expect(result).toEqual(['test']);
     });
 

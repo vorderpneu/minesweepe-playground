@@ -7,25 +7,25 @@ import { Field, flag } from '../model/model';
   styleUrls: ['./field.component.scss'],
 })
 export class FieldComponent implements OnChanges {
-  @Input('bombs') bombs!: Field;
-  @Input('isFlagged') isFlagged!: boolean;
+  @Input() bombs!: Field;
+  @Input() isFlagged!: boolean;
   @Output() leftClickOnField = new EventEmitter<Event>();
   @Output() rightClickOnField = new EventEmitter<string>();
   $event!: Event;
   content: typeof flag| '💣' | Field | '' = '';
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.content = this.isFlagged ? flag : '';
-  }
-
   @HostListener('contextmenu', ['$event'])
-  onRightClick($event: MouseEvent ) {
+  onRightClick($event: MouseEvent): void  {
     $event.preventDefault();
     console.log($event.target);
     this.rightClickOnField.emit(($event.target as Element).id);
   }
   @HostListener('click', ['$event'])
-  emitLeftClickOnField($event: Event) {
+  emitLeftClickOnField($event: Event): void {
     this.leftClickOnField.emit($event);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.content = this.isFlagged ? flag : '';
   }
 }
