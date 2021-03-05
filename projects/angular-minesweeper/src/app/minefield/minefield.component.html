@@ -1,0 +1,9 @@
+<div *ngFor="let row of minefield; let i=index">
+  <app-field *ngFor="let field of row; let j=index" id="{{'r'+ i + 'c' + j}}"
+             [bombs]="field"
+             [isFlagged]="isFlagged('r'+ i + 'c' + j)"
+             (leftClickOnField)="emitLeftClickOnField($event)"
+             (rightClickOnField)="emitRightClickOnField($event)">
+  </app-field>
+</div>
+

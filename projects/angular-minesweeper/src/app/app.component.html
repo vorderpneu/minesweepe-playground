@@ -1,0 +1,5 @@
+<app-container [minefield]="minefield | async"
+               [flaggedFields]="flaggedFields"
+               (leftClickOnField)="handleLeftClickOnField($event)"
+               (rightClickOnField)="handleRightClickOnField($event)">
+</app-container>

@@ -1,0 +1,5 @@
+<app-minefield [minefield]="minefield"
+               [flaggedFields]="flaggedFields"
+               (rightClickOnField)="emitRightClickOnField($event)"
+               (leftClickOnField)="emitLeftClickOnField($event)"
+></app-minefield>
