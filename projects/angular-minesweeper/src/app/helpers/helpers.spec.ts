@@ -275,7 +275,7 @@ describe('Helpers', () => {
     });
 
     it('do nothing if id is empty', () => {
-      const result = fillFlaggedFieldsArray(['0', '1', '2', '3'], null, 10);
+      const result = fillFlaggedFieldsArray(['0', '1', '2', '3'], '', 10);
       expect(result).toEqual(['0', '1', '2', '3']);
     });
 
