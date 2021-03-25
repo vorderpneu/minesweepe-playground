@@ -1,7 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { cloneDeep } from 'lodash';
 import { Observable, of } from 'rxjs';
-import { fillFlaggedFieldsArray, setupMinefield } from './helpers/helpers';
-import { bombs, columns, Field, rows } from './model/model';
+import {
+  flagField,
+  initialize2dArray,
+  setupMinefield,
+  checkClickedField,
+  countOccurenceOfEllementInArray,
+  endGame
+} from './helpers/helpers';
+import {
+  bombIcon,
+  bombs,
+  columns,
+  Field,
+  flagIcon,
+  GameProgressField,
+  invalidFieldId,
+  RowColumnObj
+} from './model/model';
+
 
 @Component({
   selector: 'app-root',
@@ -9,26 +27,37 @@ import { bombs, columns, Field, rows } from './model/model';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public minefield: Observable<Field[][] | null> = new Observable<Field[][]>();
-  public flaggedFields: string[] = [];
-  constructor() {
-  }
+  public initializedGameMinefield$: Observable<Field[][]> = new Observable<Field[][]>();
+  public gameProgressMinefield$: Observable<GameProgressField[][]> = new Observable<GameProgressField[][]>();
+  public initializedGameMinefield: Field[][] = [];
+  public gameProgressMinefield: GameProgressField[][] = [];
+  public flaggedFields: RowColumnObj[] = [];
+  public revealedFields: string[] = [];
+  public hitBomb: RowColumnObj = invalidFieldId;
+
   public ngOnInit(): void {
-    const newMinefield: Field[][] = [];
-    for (let i = 0; i < rows; i++) {
-      newMinefield[i] = [];
-      for (let j = 0; j < columns; j++) {
-        newMinefield[i][j] = 0;
+    this.initializedGameMinefield = setupMinefield(initialize2dArray([], 0) as unknown as Field[][], bombs);
+    this.initializedGameMinefield$ = of(this.initializedGameMinefield );
+
+    this.gameProgressMinefield = initialize2dArray([], undefined) as unknown as GameProgressField[][];
+    this.gameProgressMinefield$ =  of(this.gameProgressMinefield);
+  }
+
+  handleLeftClickOnField(id: RowColumnObj): void {
+      this.gameProgressMinefield =
+        checkClickedField(cloneDeep(this.gameProgressMinefield), cloneDeep(this.initializedGameMinefield), id.row, id.column);
+
+      if (countOccurenceOfEllementInArray(this.gameProgressMinefield, bombIcon) >= 1) {
+        this.gameProgressMinefield = endGame(cloneDeep(this.initializedGameMinefield), 'loss');
+        this.hitBomb = id;
+      } else if (countOccurenceOfEllementInArray(this.gameProgressMinefield, undefined) === bombs) {
+        this.gameProgressMinefield = endGame(cloneDeep(this.initializedGameMinefield), 'win');
       }
-    }
-    this.minefield = of(setupMinefield(newMinefield, bombs));
   }
 
-  handleLeftClickOnField($event: Event): void {
-    console.log($event);
-  }
-
-  handleRightClickOnField(id: string): void {
-    this.flaggedFields = fillFlaggedFieldsArray([...this.flaggedFields], id, bombs);
+  handleRightClickOnField(id: RowColumnObj): void {
+    const flagFieldRes = flagField(cloneDeep(this.gameProgressMinefield), [...this.flaggedFields], id, bombs);
+    this.flaggedFields = flagFieldRes.flaggedFields;
+    this.gameProgressMinefield = flagFieldRes.minefield;
   }
 }

@@ -1,8 +1,8 @@
-import { bomb, Field } from '../model/model';
-import { fillFlaggedFieldsArray, increaseBombCountOfNeighbours } from './helpers';
+import { cloneDeep } from 'lodash';
+import { bomb, Field, flagIcon, GameProgressField } from '../model/model';
+import { flagField, increaseBombCountOfNeighbours } from './helpers';
 
 describe('Helpers', () => {
-
   describe('increaseBombCountOfNeighbours', () => {
     it('bomb right in the middle ', () => {
       const testee: Field[][] =
@@ -21,6 +21,7 @@ describe('Helpers', () => {
       const result = increaseBombCountOfNeighbours(testee, 1, 1);
       expect(result).toEqual(expectedField);
     });
+
     it('bomb top left', () => {
       const testee: Field[][] =
         [
@@ -263,30 +264,61 @@ describe('Helpers', () => {
     });
   });
 
-  describe('fillFlaggedFieldsArray', () => {
-    it('add id to Array', () => {
-      const result = fillFlaggedFieldsArray([], 'test', 10);
-      expect(result).toEqual(['test']);
+  describe('flagField', () => {
+    let testee: GameProgressField[][];
+    let expectedField: GameProgressField[][];
+    it('add field to flagged Fields Array', () => {
+      testee = [
+          [undefined, undefined],
+          [undefined, undefined]
+        ];
+      expectedField = [
+        [undefined, flagIcon],
+        [undefined, undefined]
+      ];
+      const result = flagField(cloneDeep(testee), [], {row: 0, column: 1}, 10);
+      expect(result).toEqual( { minefield: expectedField, flaggedFields: [{row: 0, column: 1}]});
     });
 
-    it('remove id to Array', () => {
-      const result = fillFlaggedFieldsArray(['0', '1', '2', '3'], '2', 10);
-      expect(result).toEqual(['0', '1', '3']);
-    });
-
-    it('do nothing if id is empty', () => {
-      const result = fillFlaggedFieldsArray(['0', '1', '2', '3'], '', 10);
-      expect(result).toEqual(['0', '1', '2', '3']);
+    it('remove id from Array', () => {
+      testee = [
+        [undefined, flagIcon, undefined],
+        [undefined, flagIcon, flagIcon]
+      ];
+      expectedField = [
+        [undefined, flagIcon, undefined],
+        [undefined, flagIcon, undefined]
+      ];
+      const result = flagField(
+        cloneDeep(testee), [{row: 0, column: 1}, {row: 1, column: 1}, {row: 1, column: 2}], {row: 1, column: 2},
+        10);
+      expect(result).toEqual({minefield: expectedField, flaggedFields: [{row: 0, column: 1}, {row: 1, column: 1}]});
     });
 
     it('already flagged the maximum nr of fields', () => {
-      const result = fillFlaggedFieldsArray(['0', '1', '2'], '4', 3);
-      expect(result).toEqual(['0', '1', '2']);
+      testee = [
+        [undefined, flagIcon, undefined],
+        [flagIcon, flagIcon, undefined]
+      ];
+      expectedField = [
+        [undefined, flagIcon, undefined],
+        [flagIcon, flagIcon, undefined]
+      ];
+      const result = flagField(cloneDeep(testee), [{row: 0, column: 1}, {row: 1, column: 1}, {row: 1, column: 0}], {row: 0, column: 0}, 3);
+      expect(result).toEqual({minefield: expectedField, flaggedFields: [{row: 0, column: 1}, {row: 1, column: 1}, {row: 1, column: 0}]});
     });
 
-    it('remove flag when already flagged the maximum nr of fields', () => {
-      const result = fillFlaggedFieldsArray(['0', '1', '2'], '1', 3);
-      expect(result).toEqual(['0', '2']);
+    it('remove flagIcon when already flagged the maximum nr of fields', () => {
+      testee = [
+        [undefined, flagIcon, undefined],
+        [flagIcon, flagIcon, undefined]
+      ];
+      expectedField = [
+        [undefined, flagIcon, undefined],
+        [flagIcon, undefined, undefined]
+      ];
+      const result = flagField(cloneDeep(testee), [{row: 0, column: 1}, {row: 1, column: 1}, {row: 1, column: 0}], {row: 1, column: 1}, 3);
+      expect(result).toEqual({minefield: expectedField, flaggedFields: [{row: 0, column: 1}, {row: 1, column: 0}]});
     });
 
   });

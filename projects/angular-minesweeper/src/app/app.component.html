@@ -1,5 +1,5 @@
-<app-container [minefield]="minefield | async"
-               [flaggedFields]="flaggedFields"
+<app-container [minefield]="(gameProgressMinefield)!"
+               [hitBomb]="hitBomb"
                (leftClickOnField)="handleLeftClickOnField($event)"
                (rightClickOnField)="handleRightClickOnField($event)">
 </app-container>

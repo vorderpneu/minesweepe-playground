@@ -1,9 +1,26 @@
 <div *ngFor="let row of minefield; let i=index">
-  <app-field *ngFor="let field of row; let j=index" id="{{'r'+ i + 'c' + j}}"
-             [bombs]="field"
-             [isFlagged]="isFlagged('r'+ i + 'c' + j)"
+  <app-field *ngFor="let field of row; let j=index"
+             [row]="i"
+             [column]="j"
+             [content]="field"
+             [ngClass]="{
+               'revealed': (field !== undefined && field !== flag),
+               'one-mine': field === 1,
+               'two-mines': field === 2,
+               'three-mines': field === 3,
+               'four-mines': field === 4,
+               'five-mines': field === 5,
+               'six-mines': field === 6,
+               'seven-mines': field === 7,
+               'eight-mines': field === 8,
+               'flagged': field === flag,
+               'top-edge': i === 0,
+               'left-edge': j === 0,
+               'hit': (hitBomb.row === i && hitBomb.column === j)
+             }"
              (leftClickOnField)="emitLeftClickOnField($event)"
-             (rightClickOnField)="emitRightClickOnField($event)">
+             (rightClickOnField)="emitRightClickOnField($event)"
+  >
   </app-field>
 </div>
 

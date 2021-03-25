@@ -1,30 +1,25 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Field } from '../model/model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { GameProgressField, RowColumnObj } from '../model/model';
 
 @Component({
   selector: 'app-container',
   templateUrl: './container.component.html',
   styleUrls: ['./container.component.scss']
 })
-export class ContainerComponent implements OnInit {
+export class ContainerComponent {
+  @Input() minefield: GameProgressField[][] = [];
+  @Input() hitBomb!: RowColumnObj;
 
-  @Input() minefield: Field[][] | null = [];
-  @Input() flaggedFields: string[] = [];
-  @Input() test = false;
-  @Output() leftClickOnField = new EventEmitter<Event>();
-  @Output() rightClickOnField = new EventEmitter<string>();
+  @Output() leftClickOnField = new EventEmitter<RowColumnObj>();
+  @Output() rightClickOnField = new EventEmitter<RowColumnObj>();
 
   constructor() { }
 
-  emitLeftClickOnField($event: Event): void  {
-    this.leftClickOnField.emit($event);
+  emitLeftClickOnField(id: RowColumnObj): void  {
+    this.leftClickOnField.emit(id);
   }
 
-  emitRightClickOnField(id: string): void  {
+  emitRightClickOnField(id: RowColumnObj): void  {
     this.rightClickOnField.emit(id);
   }
-
-  ngOnInit(): void {
-  }
-
 }

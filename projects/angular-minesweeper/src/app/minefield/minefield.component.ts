@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { arrayOfStringsContainsValue } from '../helpers/helpers';
-import { Field } from '../model/model';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { flagIcon, GameProgressField, RowColumnObj } from '../model/model';
 
 @Component({
   selector: 'app-minefield',
@@ -8,20 +7,20 @@ import { Field } from '../model/model';
   styleUrls: ['./minefield.component.scss']
 })
 export class MinefieldComponent {
-  @Input() minefield: Field[][] | null = [];
-  @Input() flaggedFields: string[] = [''];
-  @Output() leftClickOnField = new EventEmitter<Event>();
-  @Output() rightClickOnField = new EventEmitter<string>();
+  @Input() minefield: GameProgressField[][] = [];
+  @Input() revealedFields: string[] = [];
+  @Input() hitBomb!: RowColumnObj;
+  @Output() leftClickOnField = new EventEmitter<RowColumnObj>();
+  @Output() rightClickOnField = new EventEmitter<RowColumnObj>();
+  flag = flagIcon;
 
-  emitLeftClickOnField($event: Event): void {
-    this.leftClickOnField.emit($event);
+  emitLeftClickOnField(id: RowColumnObj): void {
+    this.leftClickOnField.emit(id);
   }
 
-  emitRightClickOnField(id: string): void  {
+  emitRightClickOnField(id: RowColumnObj): void  {
     this.rightClickOnField.emit(id);
   }
 
-  isFlagged(id: string): boolean {
-    return arrayOfStringsContainsValue(this.flaggedFields, id);
-  }
+
 }

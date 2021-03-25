@@ -1,31 +1,38 @@
-import { Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Field, flag } from '../model/model';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input, OnChanges, OnInit,
+  Output, SimpleChanges
+} from '@angular/core';
+import { generateFieldId } from '../helpers/helpers';
+import { flagIcon, GameProgressField, RowColumnObj } from '../model/model';
 
 @Component({
   selector: 'app-field',
   templateUrl: './field.component.html',
   styleUrls: ['./field.component.scss'],
 })
-export class FieldComponent implements OnChanges {
-  @Input() bombs!: Field;
-  @Input() isFlagged!: boolean;
-  @Output() leftClickOnField = new EventEmitter<Event>();
-  @Output() rightClickOnField = new EventEmitter<string>();
-  $event!: Event;
-  content: typeof flag| '💣' | Field | '' = '';
+export class FieldComponent {
+  @Input() content!: GameProgressField;
+  @Input() row!: number;
+  @Input() column!: number;
+  @Output() leftClickOnField = new EventEmitter<RowColumnObj>();
+  @Output() rightClickOnField = new EventEmitter<RowColumnObj>();
+
+  @HostListener('click', [])
+  emitLeftClickOnField(): void {
+    if (this.content === undefined) {
+      this.leftClickOnField.emit({row: this.row, column: this.column});
+    }
+  }
 
   @HostListener('contextmenu', ['$event'])
-  onRightClick($event: MouseEvent): void  {
+  emitRightClickOnField($event: MouseEvent): void  {
     $event.preventDefault();
-    console.log($event.target);
-    this.rightClickOnField.emit(($event.target as Element).id);
-  }
-  @HostListener('click', ['$event'])
-  emitLeftClickOnField($event: Event): void {
-    this.leftClickOnField.emit($event);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.content = this.isFlagged ? flag : '';
+    if (this.content === undefined || this.content === flagIcon) {
+      this.rightClickOnField.emit({row: this.row, column: this.column});
+    }
   }
 }
