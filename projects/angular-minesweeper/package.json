@@ -64,6 +64,7 @@
     "preset": "jest-preset-angular",
     "setupFilesAfterEnv": [
       "./setupJest.ts"
+
     ]
   },
   "husky": {
